@@ -268,6 +268,26 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
  #stagePage .stage-play{width:clamp(140px,44vw,200px)!important;height:38px!important;min-height:38px!important;font-size:13px!important;bottom:max(6px,env(safe-area-inset-bottom))!important}
 }
 
+
+/* Character selection: responsive, no viewport overflow */
+#homePage #startJourney,#stagePage #stagePlay{width:max-content!important;min-width:0!important;max-width:calc(100% - 24px)!important;padding-inline:clamp(18px,3vw,30px)!important;white-space:nowrap!important;}
+#characterPage{background:#070d29;}
+.character-scene{position:absolute;inset:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(9px,2vh,22px);padding:clamp(15px,4vh,38px) 14px;background:radial-gradient(ellipse at 50% 90%,rgba(255,141,17,.45),transparent 50%),radial-gradient(circle at 75% 15%,rgba(255,220,132,.32),transparent 18%),linear-gradient(180deg,#07132f 0%,#222053 55%,#6c2c30 100%);}
+.character-scene:before{content:'✦  🏮  ✨  🏮  ✦  🏮  ✨  🏮  ✦';position:absolute;top:12%;left:0;width:100%;text-align:center;font-size:clamp(18px,3vw,42px);letter-spacing:clamp(3px,2vw,25px);opacity:.8;pointer-events:none;}
+#characterPage .stage-home{position:absolute;z-index:5;left:clamp(10px,3vw,30px);top:clamp(10px,3vh,24px);font-size:clamp(12px,1.4vw,16px);}
+.character-heading{z-index:1;text-align:center;color:#ffe7a0;font-size:clamp(22px,3vw,42px);font-weight:900;text-shadow:0 3px 12px #7d3200;margin-top:clamp(30px,5vh,50px)}
+.character-heading small{display:block;font-size:clamp(12px,1.4vw,18px);font-weight:600;color:#fff0ce;margin-top:3px;}
+.character-options{z-index:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,4vw,70px);width:min(92vw,780px);}
+.character-option{display:flex;flex-direction:column;align-items:center;gap:3px;padding:clamp(8px,1.5vw,18px);background:rgba(17,12,44,.45);border:3px solid rgba(255,210,116,.45);border-radius:22px;color:#fff1c2;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s;min-width:0;}
+.character-option img{width:min(100%,260px);aspect-ratio:1;object-fit:contain;display:block;}
+.character-option strong{font-size:clamp(18px,2.3vw,30px)}
+.character-option span{font-size:clamp(13px,1.6vw,20px)}
+.character-option.chosen{border-color:#ffeb72;box-shadow:0 0 22px #ffc744, inset 0 0 12px #ffbc4255;transform:translateY(-4px)}
+.character-start{z-index:1;cursor:pointer;border-radius:999px;border:3px solid #fff0a4;background:linear-gradient(#ffe88b,#ffb324 55%,#dc6808);color:#713000;font-weight:900;font-size:clamp(16px,2vw,23px);padding:9px 25px;box-shadow:0 5px 0 #7c2d03;}
+.character-status{z-index:1;text-align:center;font-size:clamp(12px,1.4vw,16px);color:#fff0d3;min-height:1.5em}
+@media(max-width:600px){.character-scene{gap:12px;padding:12px 12px 24px}.character-heading{margin-top:38px}.character-options{width:min(94vw,460px);gap:10px}.character-option{border-radius:14px;border-width:2px;padding:6px}.character-option img{width:100%;max-height:30dvh}.character-start{padding:8px 22px}.character-scene:before{top:9%;font-size:17px;letter-spacing:3px}}
+@media(max-height:540px){.character-scene{justify-content:flex-start}.character-heading{margin-top:30px}.character-option img{max-height:33vh}.character-options{width:min(80vw,620px)} }
+
 </style>
 </head>
 <body>
@@ -299,9 +319,22 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
     </div>
     <button class="play-button stage-play" id="stagePlay" type="button"><span>နွှဲပျော်မယ်</span><span class="arrow">▶</span></button>
   </section>
+
+<section class="page" id="characterPage" aria-label="Character selection">
+  <div class="character-scene">
+    <button class="stage-home" id="characterBack" type="button">‹ Stages</button>
+    <div class="character-heading">ဇာတ်ကောင် ရွေးချယ်ပါ <small>Choose your character</small></div>
+    <div class="character-options">
+      <button class="character-option" data-character="too" type="button" aria-pressed="false"><img src="a-too.png" alt="A Too"><strong>အတူး</strong><span>A Too</span></button>
+      <button class="character-option" data-character="thet" type="button" aria-pressed="false"><img src="a-thet.png" alt="A Thet"><strong>အသက်</strong><span>A Thet</span></button>
+    </div>
+    <button class="character-start" id="characterPlay" type="button">နွှဲပျော်မယ် <span>▶</span></button>
+    <div class="character-status" id="characterStatus" aria-live="polite">ဇာတ်ကောင်တစ်ယောက်ကို ရွေးချယ်ပါ</div>
+  </div>
+</section>
 </div>
 <script>
-const pages={home:document.getElementById('homePage'),intro:document.getElementById('introPage'),stage:document.getElementById('stagePage')};
+const pages={home:document.getElementById('homePage'),intro:document.getElementById('introPage'),stage:document.getElementById('stagePage'),character:document.getElementById('characterPage')};
 let introTimer;
 function showPage(name){Object.values(pages).forEach(p=>p.classList.remove('active'));pages[name].classList.add('active');}
 document.getElementById('startJourney').addEventListener('click',()=>{
@@ -320,12 +353,19 @@ document.querySelectorAll('.stage-card').forEach(card => {
   });
 });
 document.getElementById('stagePlay').addEventListener('click',()=>{
-  if (!selectedStage) {
-    document.querySelector('.stage-grid').style.filter = 'drop-shadow(0 0 8px #ffe56b)';
-    setTimeout(()=>document.querySelector('.stage-grid').style.filter='',450);
-    return;
-  }
-  alert('Stage ' + selectedStage + ' ကို ရွေးချယ်ပြီးပါပြီ။ Game ကို နောက်တစ်ဆင့်တွင် ချိတ်ဆက်နိုင်ပါသည်။');
+  showPage('character');
+});
+let selectedCharacter = null;
+document.querySelectorAll('.character-option').forEach(button=>button.addEventListener('click',()=>{
+  document.querySelectorAll('.character-option').forEach(el=>{el.classList.remove('chosen');el.setAttribute('aria-pressed','false')});
+  button.classList.add('chosen');button.setAttribute('aria-pressed','true');
+  selectedCharacter=button.dataset.character;
+  document.getElementById('characterStatus').textContent=selectedCharacter==='too'?'အတူး (A Too) ကို ရွေးထားပါတယ်':'အသက် (A Thet) ကို ရွေးထားပါတယ်';
+}));
+document.getElementById('characterBack').addEventListener('click',()=>showPage('stage'));
+document.getElementById('characterPlay').addEventListener('click',()=>{
+  if(!selectedCharacter){document.getElementById('characterStatus').textContent='အရင်ဆုံး ဇာတ်ကောင်တစ်ယောက်ကို ရွေးပါ';return;}
+  document.getElementById('characterStatus').textContent='ဇာတ်ကောင် ရွေးချယ်ပြီးပါပြီ။ Game stage ကို နောက်တစ်ဆင့်တွင် ချိတ်ဆက်နိုင်ပါသည်။';
 });
 // Back-to-home controls are optional on some pages; guard missing elements
 // so one absent button cannot stop the Main Page handler from being registered.
