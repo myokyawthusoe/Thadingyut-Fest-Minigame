@@ -241,6 +241,33 @@ body{display:grid;place-items:center;min-height:100vh;min-height:100dvh}
   #introPage .intro-caption .caption-my,#introPage .intro-caption .caption-en,#introPage .intro-caption .caption-de{font-size:11px;line-height:1.15}
 }
 
+/* Responsive Safari/Chrome fix: CSS must stay inside <style>. */
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+.game-screen{width:100%;height:100vh;height:100dvh;min-height:0;overflow:hidden}
+.page{width:100%;height:100%;}
+#homePage{background-size:100% 100%;background-position:center center;background-repeat:no-repeat}
+#homePage .play-button#startJourney{width:clamp(130px,22vw,250px);height:clamp(38px,6vh,54px);min-height:38px;font-size:clamp(14px,1.6vw,21px)}
+#introPage .intro-art{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:center 56%}
+#introPage .intro-caption{z-index:8;left:4%;right:4%;bottom:max(10px,env(safe-area-inset-bottom));}
+#stagePage{overflow:hidden;background-size:100% 100%;background-position:center center;background-repeat:no-repeat}
+#stagePage .stage-home{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));padding:6px 10px;font-size:clamp(11px,1vw,14px)}
+#stagePage .stage-grid{position:absolute!important;top:43.2%!important;left:1%!important;right:1%!important;bottom:14%!important;inset:43.2% 1% 14%!important;padding:0!important;gap:1%!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(0,1fr))!important;box-sizing:border-box!important}
+#stagePage .stage-card{position:relative!important;min-width:0!important;min-height:0!important;width:100%!important;height:100%!important;margin:0!important;z-index:2!important}
+#stagePage .stage-card:disabled::after{inset:0!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;overflow-wrap:anywhere!important;font-size:clamp(10px,1.1vw,14px)!important;padding:4px!important}
+#stagePage .stage-play{position:absolute!important;left:50%!important;top:auto!important;bottom:max(7px,env(safe-area-inset-bottom))!important;transform:translateX(-50%)!important;z-index:30!important;width:clamp(145px,27vw,250px)!important;height:clamp(38px,5.5vh,46px)!important;min-height:38px!important;padding:0 12px!important;font-size:clamp(14px,1.5vw,19px)!important}
+#stagePage .stage-play:hover,#stagePage .stage-play:active{transform:translateX(-50%)!important}
+@media(max-width:600px){
+ .game-screen{height:100vh;height:100dvh}
+ #homePage .play-button#startJourney{width:clamp(135px,42vw,205px);height:42px;font-size:14px;top:74%}
+ #introPage .intro-art{object-position:center 54%}
+ #introPage .intro-caption{left:3%;right:3%;padding:7px 8px;font-size:12px}
+ #stagePage{background-size:auto 100%;background-position:center center}
+ #stagePage .stage-grid{top:43.5%!important;bottom:14%!important;inset:43.5% 1% 14%!important;gap:1%!important}
+ #stagePage .stage-home{top:max(7px,env(safe-area-inset-top));left:7px;padding:5px 8px;font-size:11px}
+ #stagePage .stage-card:disabled::after{font-size:clamp(9px,2.5vw,12px)!important;line-height:1.15;padding:3px!important}
+ #stagePage .stage-play{width:clamp(140px,44vw,200px)!important;height:38px!important;min-height:38px!important;font-size:13px!important;bottom:max(6px,env(safe-area-inset-bottom))!important}
+}
+
 </style>
 </head>
 <body>
@@ -318,13 +345,6 @@ if (stageHomeButton) {
   });
 }
 </script>
-
-/* Final cross-browser stage alignment override */
-#stagePage{overflow:hidden;background-size:100% 100%;background-position:center center}
-#stagePage .stage-grid{position:absolute!important;top:43.4%!important;left:1%!important;right:1%!important;bottom:1.2%!important;inset:43.4% 1% 1.2%!important;padding:0!important;gap:1.1%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(0,1fr))!important}
-#stagePage .stage-card{min-width:0!important;min-height:0!important;width:100%!important;height:100%!important;margin:0!important}
-#stagePage .stage-card:disabled::after{inset:0!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;overflow-wrap:anywhere!important}
-@media(max-width:600px){#stagePage .stage-grid{top:43.4%!important;left:1%!important;right:1%!important;bottom:1.2%!important;inset:43.4% 1% 1.2%!important;padding:0!important;gap:1%!important}#stagePage .stage-card:disabled::after{font-size:clamp(10px,2.8vw,13px)!important;padding:4px!important}#stagePage .stage-play{width:min(52vw,280px)!important;bottom:max(8px,env(safe-area-inset-bottom))!important;height:42px!important;min-height:42px!important}}
 
 </body>
 </html>
